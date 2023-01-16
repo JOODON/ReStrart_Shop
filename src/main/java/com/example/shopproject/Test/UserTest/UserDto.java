@@ -1,4 +1,4 @@
-package com.example.UserTest;
+package com.example.shopproject.Test.UserTest;
 
 import lombok.Getter;
 import lombok.Setter;

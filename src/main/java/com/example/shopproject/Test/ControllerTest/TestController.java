@@ -1,6 +1,6 @@
-package com.example.shopproject.ControllerTest;
+package com.example.shopproject.Test.ControllerTest;
 
-import com.example.UserTest.UserDto;
+import com.example.shopproject.Test.UserTest.UserDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
