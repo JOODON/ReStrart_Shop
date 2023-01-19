@@ -2,22 +2,30 @@ package com.example.shopproject.repository;
 
 import com.example.shopproject.constant.ItemSellStatus;
 import com.example.shopproject.entity.Item;
+import com.example.shopproject.entity.QItem;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.test.properties")
 class ItemRepositoryTest {
     @Autowired
     ItemRepository itemRepository;
+
+    @PersistenceContext
+    EntityManager em;//양속성 컨텐츠를 사용하기 위하여 빈을 주입해줌
 
     @Test
     @DisplayName("상품 저장 테스트")
@@ -93,5 +101,22 @@ class ItemRepositoryTest {
         for (Item item : itemList){
             System.out.println(item.toString());
         }
+    }
+    @Test
+    @DisplayName("쿼리dsl 조회테스트1")
+    public void queryDslTest(){
+        this.createItemList();
+        JPAQueryFactory queryFactory=new JPAQueryFactory(em);//쿼리를 동적으로 생성 파라미터는 Em객체를 주입
+        QItem qItem=QItem.item;//쿼리 객체를 생성해줌
+        JPAQuery<Item> query=queryFactory.selectFrom(qItem)
+                .where(qItem.itemSellStatus.eq(ItemSellStatus.SELL))
+                .where(qItem.itemDetail.like("%"+"테스트 상품 상세 설명서"+"%")).orderBy(qItem.price.desc());
+
+        List<Item> itemList=query.fetch();//쿼리문이 실행 되는 부분
+
+        for (Item item : itemList){
+            System.out.println(item.toString());
+        }
+
     }
 }
