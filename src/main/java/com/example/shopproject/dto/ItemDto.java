@@ -3,6 +3,8 @@ package com.example.shopproject.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class ItemDto {
@@ -13,4 +15,11 @@ public class ItemDto {
 
     private Integer price;
 
+    private String itemDetail;
+
+    private String sellStatCd;
+
+    private LocalDateTime regTime;
+
+    private LocalDateTime updateTime;
 }
