@@ -59,4 +59,15 @@ public class ThymeleafController {
         model.addAttribute("list",list);
         return "thymeleafEx/thymeleafEx04";
     }
+    @GetMapping(value = "/ex05")
+    public String thymeleafEx05(Model model){
+        return "thymeleafEx/thymeleafEx05";
+    }
+    @GetMapping(value = "ex06")
+    public String thymeleafEx06(Model model,String param1,String param2){
+        model.addAttribute("param1",param1);
+        model.addAttribute("param2",param2);
+
+        return "thymeleafEx/thymeleafEx06";
+    }
 }
