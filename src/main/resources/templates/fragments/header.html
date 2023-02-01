@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
+<!--태그를 사용하기 위해 네임 스페이스를 추가-->
 <div th:fragment="header">
-    <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #e77485">
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -14,21 +14,25 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                    <!--어드민 계정으로 로그인인한경우만 보여주기-->
                     <a class="nav-link" href="/admin/item/new">상품 등록</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
                     <a class="nav-link" href="/admin/items">상품 관리</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <!--로그인을 했을 경우에만 보여주는 페이지-->
                     <a class="nav-link" href="/cart">장바구니</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link" href="/orders">구매이력</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAnonymous()">
+                    <!--로그인을 하지 않을 경우에는 로그인 메뉴-->
                     <a class="nav-link" href="/members/login">로그인</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <!--로그인을 하면 로그아웃-->
                     <a class="nav-link" href="/members/logout">로그아웃</a>
                 </li>
             </ul>
