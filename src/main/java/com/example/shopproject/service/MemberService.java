@@ -3,13 +3,17 @@ package com.example.shopproject.service;
 import com.example.shopproject.entity.Member;
 import com.example.shopproject.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional//파라미터가 한개인거 Autowired기능 구현
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
@@ -24,4 +28,19 @@ public class MemberService {
             throw new IllegalStateException("이미 가입된 회원 입니다 :)");
         }
     }
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
+        Member member=memberRepository.findByEmail(email);
+
+        if (member == null){
+            throw new UsernameNotFoundException(email);
+        }
+
+        return User.builder()
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .roles(member.getRole().toString())
+                .build();
+    }
+
 }
