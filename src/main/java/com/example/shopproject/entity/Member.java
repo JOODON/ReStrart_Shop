@@ -1,7 +1,7 @@
 package com.example.shopproject.entity;
 
 import com.example.shopproject.constant.Role;
-import com.example.shopproject.dto.MemberFromDto;
+import com.example.shopproject.dto.MemberFormDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,13 +31,13 @@ public class Member {
     @Enumerated(EnumType.STRING)//Enum타입을 스트링으로 변환시켜서 사용하기!
     private Role role;
 
-    public static Member createMember(MemberFromDto memberFromDto, PasswordEncoder passwordEncoder){
+    public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder){
         Member member=new Member();
 
-        member.setName(memberFromDto.getName());
-        member.setEmail(memberFromDto.getEmail());
+        member.setName(memberFormDto.getName());
+        member.setEmail(memberFormDto.getEmail());
         member.setPassword(member.getPassword());
-        String password=passwordEncoder.encode(memberFromDto.getPassword());
+        String password=passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
         member.setRole(Role.USER);
 

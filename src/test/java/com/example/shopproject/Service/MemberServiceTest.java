@@ -1,6 +1,6 @@
 package com.example.shopproject.Service;
 
-import com.example.shopproject.dto.MemberFromDto;
+import com.example.shopproject.dto.MemberFormDto;
 import com.example.shopproject.entity.Member;
 import com.example.shopproject.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @SpringBootTest
 @Transactional
 @TestPropertySource(locations = "classpath:application.test.properties")
@@ -22,7 +24,7 @@ class MemberServiceTest {
     PasswordEncoder passwordEncoder;
 
     public Member createMember(){
-        MemberFromDto memberFromDto=new MemberFromDto();
+        MemberFormDto memberFromDto=new MemberFormDto();
         memberFromDto.setEmail("launcher37@naver.com");
         memberFromDto.setName("주동호");
         memberFromDto.setAddress("인천광역시 주안동");
@@ -43,5 +45,17 @@ class MemberServiceTest {
         assertEquals(member.getPassword(),saveMember.getPassword());
         assertEquals(member.getRole(),saveMember.getRole());
 
+    }
+    @Test
+    @DisplayName("회원가입 중복 테스트")
+    public void saveDuplicateMemberTest(){
+        Member member1=createMember();
+        Member member2=createMember();
+
+        memberService.saveMember(member1);
+
+        Throwable e=assertThrows(IllegalStateException.class, () -> {memberService.saveMember(member2);});
+
+        assertEquals("이미 가입된 회원 입니다 :)",e.getMessage());
     }
 }
