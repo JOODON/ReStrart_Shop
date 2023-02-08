@@ -77,5 +77,8 @@ public class OrderTestPart3 {
 
         OrderItem orderItem=orderItemRepository.findById(orderItemId).orElseThrow(EntityNotFoundException::new);
         System.out.println("Order Class : " + orderItem.getOrder().getClass());
+        System.out.println("======================================================");
+        orderItem.getOrder().getOrderDate();
+        System.out.println("======================================================");
     }
 }
