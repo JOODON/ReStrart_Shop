@@ -62,7 +62,7 @@ class ItemServiceTest {
 
         List<MultipartFile> multipartFileList=createMultipartFiles();
         Long itemId= itemService.saveItem(itemFormDto,multipartFileList);
-        List<ItemImg> itemImgList=itemImgRepository.findByItemIdOOrderByIdAsc(itemId);
+        List<ItemImg> itemImgList=itemImgRepository.findByItemIdOrderByIdAsc(itemId);
         Item item=itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
 
         assertEquals(itemFormDto.getItemNm(),item.getItemNm());

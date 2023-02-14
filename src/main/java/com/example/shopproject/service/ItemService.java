@@ -17,8 +17,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemService {
     private final ItemRepository itemRepository;
-    private final ItemImgRepository itemImgRepository;
     private final ItemImgService itemImgService;
+
+    private final ItemImgRepository itemImgRepository;
 
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList)throws  Exception{
         //상품 등록
@@ -33,8 +34,8 @@ public class ItemService {
             }
             else {
                 itemImg.setRepimgYn("N");
-                itemImgService.saveItemImg(itemImg,itemImgFileList.get(i));
             }
+            itemImgService.saveItemImg(itemImg,itemImgFileList.get(i));
         }
         return item.getId();
     }
