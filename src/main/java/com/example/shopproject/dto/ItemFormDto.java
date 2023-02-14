@@ -24,7 +24,7 @@ public class ItemFormDto {
     @NotBlank(message = "이름은 필수값 입니다")
     private String itemDetail;
 
-    @NotBlank(message = "재고는 필수값 입니다")
+    @NotNull(message = "재고는 필수값 입니다")
     private Integer stockNumber;
 
     private ItemSellStatus itemSellStatus;
