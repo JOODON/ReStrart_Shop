@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "item")
 @Getter @Setter
 @ToString
-public class Item {
+public class Item extends BaseEntity{
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,10 +34,6 @@ public class Item {
     //상품 상세 설명
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
-
-    private LocalDateTime regTime;//등록 시간
-
-    private LocalDateTime updateTime;//수정 시간
 
     public void updateTime(ItemFormDto itemFormDto){
         this.itemNm=itemFormDto.getItemNm();

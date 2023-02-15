@@ -49,7 +49,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private BooleanExpression searchByLike(String searchBy,String searchQuery){
         if (StringUtils.equals("itemNm",searchBy)){
             return QItem.item.itemNm.like("%"+searchQuery+"%");
-        } else if (StringUtils.equals("createBy", searchBy)) {
+        } else if (StringUtils.equals("createdBy", searchBy)) {
             return QItem.item.createdBy.like("%"+searchQuery+"%");
         }
         return null;
@@ -59,7 +59,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         QueryResults<Item> results = queryFactory.selectFrom(QItem.item)
                 .where(regDtsAfter(itemSearchDto.getSearchDateType())
-                ,searchSellStatusEq(itemSearchDto.getItemSellStatus()),
+                ,searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
                         searchByLike(itemSearchDto.getSearchBy(),
                                 itemSearchDto.getSearchQuery()))
                 .orderBy(QItem.item.id.desc())

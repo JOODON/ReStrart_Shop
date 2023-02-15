@@ -39,7 +39,7 @@ public class MemberTest {
 
         System.out.println("register TIME :"+member.getRegTime());
         System.out.println("update TIME :"+member.getUpDateTime());
-        System.out.println("create Member :"+member.getCreateBy());
+        System.out.println("create Member :"+member.getCreatedBy());
         System.out.println("modify member :"+member.getModifiedyBy());
 
     }
