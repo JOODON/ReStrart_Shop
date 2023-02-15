@@ -1,9 +1,14 @@
 package com.example.shopproject.controller;
 
 import com.example.shopproject.dto.ItemFormDto;
+import com.example.shopproject.dto.ItemSearchDto;
+import com.example.shopproject.entity.Item;
 import com.example.shopproject.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +22,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -57,5 +63,32 @@ public class ItemController {
             return "item/itemForm";
         }
         return "redirect:/";
+    }
+    @PostMapping(value = "/admin/item/{itemId}")
+    public String itemUpdate(@Valid ItemFormDto itemFormDto,BindingResult bindingResult
+    ,@RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,Model model){
+        if (bindingResult.hasErrors()){
+            return "item/itemForm";
+        }
+        if (itemImgFileList.get(0).isEmpty() && itemFormDto.getId() == null){
+            model.addAttribute("errorMessage","첫번째 상품 이미지는 필수 입력 값 입니다");
+            return "item/itemForm";
+        }
+        try {
+            itemService.updateItem(itemFormDto,itemImgFileList);
+        }catch (Exception e){
+            model.addAttribute("errorMessage","상품 수정중 에러가 발생하였습니다");
+            return "item/itemForm";
+        }
+        return "redirect:/";
+    }
+    @GetMapping(value = {"/admin/items","/admin/items/{page}"})
+    public String itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page,Model model){
+        Pageable pageable=PageRequest.of(page.isPresent() ? page.get() : 0,3);
+        Page<Item> items=itemService.getAdminItemPage(itemSearchDto,pageable);
+        model.addAttribute("items",items);
+        model.addAttribute("itemSearchDto",itemSearchDto);
+        model.addAttribute("maxPage",5);
+        return "item/itemMng";
     }
 }

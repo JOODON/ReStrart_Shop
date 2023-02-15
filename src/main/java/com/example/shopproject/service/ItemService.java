@@ -2,11 +2,14 @@ package com.example.shopproject.service;
 
 import com.example.shopproject.dto.ItemFormDto;
 import com.example.shopproject.dto.ItemImgDto;
+import com.example.shopproject.dto.ItemSearchDto;
 import com.example.shopproject.entity.Item;
 import com.example.shopproject.entity.ItemImg;
 import com.example.shopproject.repository.ItemImgRepository;
 import com.example.shopproject.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,5 +59,22 @@ public class ItemService {
             itemImgService.saveItemImg(itemImg,itemImgFileList.get(i));
         }
         return item.getId();
+    }
+    public Long updateItem(ItemFormDto itemFormDto,List<MultipartFile> itemImgFileList) throws Exception{
+        Item item=itemRepository.findById(itemFormDto.getId()).orElseThrow(EntityExistsException::new);
+
+        item.updateTime(itemFormDto);
+
+        List<Long> itemImgIds=itemFormDto.getItemImgIds();
+
+        for (int i=0; i<itemImgFileList.size();i++){
+            itemImgService.updateItemImg(itemImgIds.get(i),itemImgFileList.get(i));
+        }
+        return item.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
+        return itemRepository.getAdminItemPage(itemSearchDto,pageable);
     }
 }
