@@ -40,7 +40,7 @@ public class OrderTest {
         item.setItemSellStatus(ItemSellStatus.SELL);
         item.setStockNumber(100);
         item.setRegTime(LocalDateTime.now());
-        item.setUpdateTime(LocalDateTime.now());
+        item.setUpDateTime(LocalDateTime.now());
 
         return item;
     }
