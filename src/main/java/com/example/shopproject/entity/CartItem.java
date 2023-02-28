@@ -23,6 +23,18 @@ public class CartItem {
     private Item item;
     //상품 정보를 알아야하기때문에 매핑을 해줌
 
-    private int Count;
+    private int count;
     //장바구니에 담을 개수
+
+    public static CartItem createCartItem(Cart cart,Item item,int count){
+        CartItem cartItem=new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setItem(item);
+        cartItem.setCount(count);
+        return cartItem;
+    }
+
+    public void addCount(int count){
+        this.count += count;
+    }
 }
