@@ -2,6 +2,8 @@ package com.example.shopproject.service;
 
 import com.example.shopproject.dto.CartDetailDto;
 import com.example.shopproject.dto.CartItemDto;
+import com.example.shopproject.dto.CartOrderDto;
+import com.example.shopproject.dto.OrderDto;
 import com.example.shopproject.entity.Cart;
 import com.example.shopproject.entity.CartItem;
 import com.example.shopproject.entity.Item;
@@ -13,6 +15,7 @@ import com.example.shopproject.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -26,6 +29,8 @@ public class CartService {
     private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+
+    private final OrderService orderService;
 
     public Long addCart(CartItemDto cartItemDto,String email){
         Item item=itemRepository.findById(cartItemDto.getItemId()).orElseThrow(EntityNotFoundException::new);
@@ -61,5 +66,50 @@ public class CartService {
         cartDetailDtoList = cartItemRepository.findCartDetailDtoList(cart.getId());
 
         return cartDetailDtoList;
+    }
+    @Transactional(readOnly = true)
+    public boolean validateCartItem(Long cartItemId,String email){
+        Member curMember = memberRepository.findByEmail(email);
+        CartItem cartItem=cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
+
+        Member saveMember=cartItem.getCart().getMember();
+
+        if (!StringUtils.equals(curMember.getEmail(),saveMember.getEmail())){
+            return false;
+        }
+        return true;
+    }
+    public void updateCartItemCount(Long cartItemId,int count){
+        CartItem cartItem=cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
+
+        cartItem.updateCount(count);
+    }
+
+    public void deleteCartItem(Long cartItemId){
+        CartItem cartItem=cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
+        //아이디로 행을 찾은후 삭제해주기!
+
+        cartItemRepository.delete(cartItem);
+    }
+
+    public Long orderCartItem(List<CartOrderDto> cartOrderDtoList,String email){
+        List<OrderDto> orderDtoList=new ArrayList<>();
+        for (CartOrderDto cartOrderDto :cartOrderDtoList){
+            CartItem cartItem=cartItemRepository.findById(cartOrderDto.getCartItemId()).orElseThrow(EntityNotFoundException::new);
+
+            OrderDto orderDto=new OrderDto();
+            orderDto.setItemId(cartItem.getItem().getId());
+            orderDto.setCount(cartItem.getCount());
+            orderDtoList.add(orderDto);
+        }
+        Long orderId =orderService.orders(orderDtoList,email);
+
+        for (CartOrderDto cartOrderDto:cartOrderDtoList){
+            CartItem cartItem=cartItemRepository.findById(cartOrderDto.getCartItemId()).orElseThrow(EntityNotFoundException::new);
+
+            cartItemRepository.delete(cartItem);
+        }
+
+        return orderId;
     }
 }
