@@ -9,6 +9,7 @@ import com.example.shopproject.repository.CartItemRepository;
 import com.example.shopproject.repository.CartRepository;
 import com.example.shopproject.repository.ItemRepository;
 import com.example.shopproject.repository.MemberRepository;
+import com.example.shopproject.service.CartService;
 import groovy.transform.Trait;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @Transactional
 @TestPropertySource(locations = "classpath:application.test.properties")
-public class CartService {
+public class CartServiceTest {
     @Autowired
     ItemRepository itemRepository;
 
@@ -31,7 +32,7 @@ public class CartService {
     MemberRepository memberRepository;
 
     @Autowired
-    com.example.shopproject.service.CartService cartService;
+    CartService cartService;
 
     @Autowired
     CartItemRepository cartItemRepository;
